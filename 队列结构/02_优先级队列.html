@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>优先级队列</title>
+</head>
+<body>
+  <script>
+    // 封装优先级队列
+    function PriorityQueue() {
+      // 封装属性
+      this.items = []
+
+      function QueueElement (element, priority) {
+        this.element = element
+        this.priority = priority
+      }
+
+      // 实现插入方法
+      PriorityQueue.prototype.enqueue = function (element, priority) {
+        // 1. 创建QueueElement对象
+        var queueElement = new QueueElement(element, priority)
+
+        // 2. 判断队列是否为空
+        if(this.items.length === 0) {
+          this.items.push(queueElement)
+        } else {
+          var added = false
+          for (let i = 0; i < this.items.length; i++) {
+            if(queueElement.priority < this.items[i].priority) {
+              this.items.splice(i, 0, queueElement)
+              added = true
+              break
+            }
+          }
+          if(!added) {
+            this.items.push(queueElement)
+          }
+        }
+      }
+    }
+
+    // 测试
+    var pg = new PriorityQueue()
+    pg.enqueue('a',111)
+    pg.enqueue('b',200)
+    pg.enqueue('ds',50)
+    pg.enqueue('nba', 66)
+    pg.enqueue('a11',111)
+    console.log(pg.items);
+  </script>
+</body>
+</html>
