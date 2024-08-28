@@ -80,7 +80,7 @@
         return true
       }
 
-      // 4.get方法 lzlal
+      // 4.get方法
       LinkedList.prototype.get = function (position) {
         // 1.对position进行越界判断
         if(position < 0 || position >= this.length) return null
@@ -114,13 +114,100 @@
       return -1
     }
     
+
+    // 6.update方法
+    LinkedList.prototype.update = function (position, element) {
+      // 1.对position进行越界判断
+      if(position < 0 || position >= this.length) return false
+
+      // 2.获取对应的数据
+      var current = this.head
+      var index = 0
+      while (index < position) {
+        current += current.next
+      }
+      // 3.修改数据
+      current.data = element
+      return true
+    }
+
+    // 7.removeAt 根据位置移除节点
+    LinkedList.prototype.removeAt = function (position) {
+      // 1.对position进行越界判断
+      if(position < 0 || position >= this.length) return null
+
+      // 2.定义变量，报存信息
+      var index = 0
+      var current = this.head
+      var previous = null
+
+      // 3.判断是否删除的是第一个节点
+      if (position === 0) {
+        current = this.head.next
+      } else {
+        while (index++ < position) {
+          previous = current
+          current = current.next
+        }
+        previous.next = current.next
+      }
+
+      // 4.length - 1
+      this.length--
+      // 5.返回移除的数据
+      return current.data
+    }
+
+    // 8.remove 根据元素删除节点
+    LinkedList.prototype.remove = function (element) {
+      // var current = this.head
+      // var previous = null
+      // while(current) {
+      //   if (current.data === element) {
+      //     previous.next = current.next
+      //   }
+      //   previous = current
+      //   current = current.next
+      // }
+
+      // 方式二
+      var position = this.indexOf(element)
+      return this.removeAt(position)
+      
+    }
+
+    // 9.判断链表是否为空
+    LinkedList.prototype.isEmpty  = function () {
+      return this.length === 0
+    }
+
+    // 10. 获取链表的长度
+    LinkedList.prototype.size = function () {
+      return this.length
+    }
+
+    // 11. 获取链表的第一个节点
+    LinkedList.prototype.getFirst = function () {
+      return this.head.data
+    }
+
+
+
     // 测试
     var list = new LinkedList()
     list.append('dddd')
     list.append('oooo')
+    list.append('565656')
     list.append('hhhh')
     list.append('9999')
-    list.insert(2,'565656')
+    console.log(list.toString());
+    list.remove('565656')
+    console.log(list.toString());
+    alert(list.isEmpty())
+    alert(list.size())
+    alert(list.getFirst())
+    
+    
   </script>
 </body>
 </html>
