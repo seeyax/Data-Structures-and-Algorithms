@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>双向链表</title>
+</head>
+<body>
+  <script>
+    // 封装双向链表
+    function DoublyLinkedList () {
+      // 属性
+      this.head = null
+      this.tail = null
+      this.length = 0
+      // 内部类：节点类
+      function Node(data) {
+        this.data = data
+        this.prev = null
+        this.next = null
+      }
+      // 常见的操作：方法
+      // 1.append方法
+      DoublyLinkedList.prototype.append = function (data) {
+        // 1.根据data创建节点
+        var newNode = Node(data)
+        // 2.判断列表是否为空列表
+        if(this.length == 0) {
+          this.head = newNode
+          this.tail = newNode
+        } else {
+          this.tail.next = newNode
+          newNode.prev = this.tail
+          this.tail = newNode
+        }
+        this.length++
+      }
+    }
+  </script>
+</body>
+</html>
