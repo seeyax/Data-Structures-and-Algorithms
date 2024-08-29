@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>集合</title>
+</head>
+<body>
+  <script>
+    // 封装集合类
+    function Set () {
+      this.items = {}
+
+      // has(value)：如果值在集合中，返回true，否则返回false。
+      Set.prototype.has = function (value) {
+        return this.items.hasOwnProperty(value)
+      }
+
+      // add(value)：向集合添加一个新的项。
+      Set.prototype.add = function (value) {
+        if(this.has(value)) return false
+        this.items[value] = value
+        return true
+      }
+      // remove(value)：从集合移除一个值。
+      Set.prototype.remove = function (value) {
+        // 判断该集合中是否包含此元素
+        if(!this.has(value)) return false
+        delete this.items[value]
+        return true
+      }
+      
+      // clear()：移除集合中的所有项。
+      Set.prototype.clear = function () {
+        this.items = {}
+      }
+      // size()：返回集合所包含元素的数量。与数组的length属性类似。
+      Set.prototype.size = function () {
+        return Object.keys(this.items).length
+      }
+      // values()：返回一个包含集合中所有值的数组。
+      Set.prototype.values = function () {
+        return Object.values(this.items)
+      }
+
+      // 集合间的操作
+      Set.prototype.union = function (otherSet) {
+        // this:集合A  otherSet: 集合B
+        var unionSet = new Set()
+        // 将A所有的元素添加到新集合中
+        var values = this.values()
+        for(let i = 0; i < values.length; i++) {
+          unionSet.add(values[i])
+        }
+        // 取出B集合中的元素，判断是否需要加到新集合中
+        values = otherSet.values()
+        for(let i = 0; i<values.length;i++) {
+          if(!unionSet.has(values[i])) {
+            unionSet.add(values[i])
+          }
+        }
+        return unionSet
+      }
+    }
+
+    // 测试
+    var set = new Set()
+    set.add('abc')
+    set.add('111')
+    set.add('222')
+    set.add('333')
+    set.add('444')
+
+    var setB = new Set()
+    setB.add('abc')
+    setB.add('111')
+    setB.add('9999')
+    setB.add('8888')
+    setB.add('7777')
+    var unionSet = set.union(setB)
+    console.log(unionSet);
+    
+    
+  </script>
+</body>
+</html>
