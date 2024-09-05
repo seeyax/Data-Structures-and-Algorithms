@@ -68,6 +68,12 @@
         // 5.进行添加操作
         bucket.push([key,value])
         this.count += 1
+
+        // 6.判断是否需要扩容操作
+        if(this.count > this.limit * 0.75) {
+          var newNum = this.getPrime(this.limit * 2)
+          this.resize(newNum)
+        }
       }
 
       // 获取操作
@@ -113,6 +119,12 @@
             bucket.splice(i, 1)
             this.count--
             return tuple[1]
+
+            // 缩小容量
+            if(this.limit > 7 && this.count < this.limit * 0.25) {
+              var newNum = this.getPrime(Math.floor(this.limit/2))
+              this.resize(newNum)
+            }
           }
         }
 
@@ -129,7 +141,56 @@
       HashTable.prototype.size = function () {
         return this.count
       }
+
+      // 哈希表的扩容/缩容
+      HashTable.prototype.resize = function (newLimit) {
+        // 1. 保存旧的数组内容
+        var oldStorage = this.storage
+
+        // 2. 重置所有的属性
+        this.storage = []
+        this.count = 0
+        this.limit = newLimit
+
+        // 3. 遍历oldStorage所有的bucket
+        for(var i = 0; i < oldStorage.length; i++) {
+          // 3.1取出对应的bucket
+          var bucket = oldStorage[i]
+          // 3.2判断bucket是否为null
+          if(bucket == null) {
+            continue
+          }
+          //3.3 bucket中有数据
+          for(var j = 0; j < bucket.length; j++) {
+            var tuple = bucket[i]
+            this.put(tuple[0], tuple[1])
+          }
+        }
+      }
+
+      HashTable.prototype.isPrime =function(num) {
+        // 1.获取num的平方根
+        var temp = parseInt(Math.sqrt(num))
+
+        // 2.循坏判断
+        for(var i = 0; i <= temp; i++) {
+          if(num % i == 0) {
+            return false
+          }
+        }
+
+        return true
+      }
+
+      // 获取质数
+      HashTable.prototype.getPrime = function (num) {
+        while(!isPrime(num)) {
+          num++
+        }
+        return num
+      }
     }
+    
 
     // 测试
     var ht = new HashTable()
