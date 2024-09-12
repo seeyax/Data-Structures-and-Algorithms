@@ -51,32 +51,160 @@
         }
       }
       // search(key)：在树中查找一个键，如果结点存在，则返回true；如果不存在，则返回false。
+      BinarySearchTree.prototype.search = function (key) {
+        return this.searchNode(this.root, key)
+      }
+      BinarySearchTree.prototype.searchNode = function(node, key) {
+        // 1.如果传入的node为null，那么就退出递归
+        if(node == null) {
+          return false
+        }
+        // 递归方案
+        // // 2.判断node节点的值和传入的key大小
+        // if(node.key > key) {
+        //   // 传入的key比较小，向左边继续查找
+        //   return this.searchNode(node.left, key)
+        // } else if(node.key < key) {
+        //   // 传入的key比较大，向右边继续查找
+        //   return this.searchNode(node.right, key)
+        // } else {
+        //   return true
+        // }
+
+        // 循环方案
+        while(node != null) {
+          if(key < node.key) {
+            node = node.left
+          } else if(key > node.key) {
+            node = node.right
+          } else {
+            return true
+          }
+        }
+      }
       // inOrderTraverse：通过中序遍历方式遍历所有结点。
+      BinarySearchTree.prototype.inOrderTraverse = function (handler) {
+        this.inOrderTraverseNode(this.root, handler)
+      }
+      BinarySearchTree.prototype.inOrderTraverseNode = function (node, handler) {
+        if(node != null) {
+          this.inOrderTraverseNode(node.left, handler)
+          handler(node.key)
+          this.inOrderTraverseNode(node.right, handler)
+        }
+      }
       // preOrderTraverse：通过先序遍历方式遍历所有结点。
+      BinarySearchTree.prototype.preOrderTraverse = function (handler) {
+        this.preOrderTraverseNode(this.root,handler)
+      }
+      /**
+       * 第一次： node -> 11
+       * 第二次： node -> 7
+       * 第三次： node -> 5
+       * 第四次： node -> 3
+      */
+      BinarySearchTree.prototype.preOrderTraverseNode = function (node,handler) {
+        if(node != null) {
+          // 1. 处理经过的节点
+          handler(node.key)
+          // 2. 处理经过的左子节点
+          this.preOrderTraverseNode(node.left, handler)
+          // 3. 处理经过的右子节点
+          this.preOrderTraverseNode(node.right, handler)
+        }
+      }
       // postOrderTraverse：通过后序遍历方式遍历所有结点。
+      BinarySearchTree.prototype.postOrderTraverse = function (handler) {
+        this.postOrderTraverseNode(this.root, handler)
+      }
+      BinarySearchTree.prototype.postOrderTraverseNode = function(node, handler) {
+        if(node != null) {
+          this.postOrderTraverseNode(node.left, handler)
+          this.postOrderTraverseNode(node.right, handler)
+          handler(node.key)
+        }
+      }
       // min：返回树中最小的值/键。
+      BinarySearchTree.prototype.min = function () {
+        var node = this.node
+        var key = null
+        while(node.left != null) {
+          key = node.key
+          node = node.left
+        }
+        return key
+      }
       // max：返回树中最大的值/键。
+      BinarySearchTree.prototype.max = function () {
+        var node = this.node
+        var key = null
+        while(node.right != null){
+          key = node.key
+          node = node.right
+        }
+        return key
+      }
       // remove(key)：从树中移除某个键。
+      /** 
+       * 删除节点要从查找要删的节点开始，找到节点后，需要考虑三种情况：
+       *  1. 该节点是叶子节点（没有子节点）
+       *  2. 该节点有一个子节点
+       *  3. 该节点有两个子节点
+       * 
+       * 思路：
+       *  1. 先找到要删除的节点，如果没有找到，不需要删除
+       *  2. 找到要删除的节点：
+       *    1). 删除叶子节点
+       *    2). 删除只有一个子节点的节点
+       *    3). 删除有两个子节点的节点
+       * */ 
+      BinarySearchTree.prototype.remove = function (key) {
+        // 1. 寻找要删除的节点
+        // 1.1 定义变量，保存一些信息
+        var current = this.root
+        var parent = null
 
+        // 2.根据对应的情况删除节点
 
-      // 测试
-      var bst = new BinarySearchTree()
-      bst.insert(11)
-      bst.insert(7)
-      bst.insert(15)
-      bst.insert(5)
-      bst.insert(3)
-      bst.insert(9)
-      bst.insert(8)
-      bst.insert(10)
-      bst.insert(13)
-      bst.insert(12)
-      bst.insert(14)
-      bst.insert(20)
-      bst.insert(18)
-      bst.insert(25)
-
+      }
     }
+
+    // 测试
+    var bst = new BinarySearchTree()
+    bst.insert(11)
+    bst.insert(7)
+    bst.insert(15)
+    bst.insert(5)
+    bst.insert(3)
+    bst.insert(9)
+    bst.insert(8)
+    bst.insert(10)
+    bst.insert(13)
+    bst.insert(12)
+    bst.insert(14)
+    bst.insert(20)
+    bst.insert(18)
+    bst.insert(25)
+    bst.insert(6)
+
+    // 测试先序遍历结果
+    var resultString = ''
+    var inOrderResultString = ''
+    var postOrderResultString = ''
+    bst.preOrderTraverse(function (key) {
+      resultString += key + ' '
+    }) 
+    bst.inOrderTraverse(function (key) {
+      inOrderResultString += key + ' '
+    })
+    bst.postOrderTraverse(function (key) {
+      postOrderResultString += key + ' '
+    })
+    console.log(resultString)
+    console.log(inOrderResultString);
+    console.log(postOrderResultString);
+    
+    
     
   </script>
 </body>
