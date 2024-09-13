@@ -162,10 +162,88 @@
         // 1. 寻找要删除的节点
         // 1.1 定义变量，保存一些信息
         var current = this.root
-        var parent = null
+        var parent = this.root
+        var isLeftChild = true
 
-        // 2.根据对应的情况删除节点
+        // 1.2 开始寻找删除的节点
+        while(current.key !== key) {
+          parent = current
+          if(key < current.key) {
+            current = current.left
+            isLeftChild = true
+          } else{
+            current = current.right
+            isLeftChild = false
+          }
+          // 某种情况：已经找到了最后的节点，依然没有找到==key
+          if (current === null) return false
+        }
 
+        // 2.根据对应的情况删除节点  找到了current.key = key
+        // 2.1 叶子节点
+        if(current.left == null && current.right == null ){
+          if(current == this.root) {
+            this.root = null
+          }else if(isLeftChild) {
+            parent.left = null
+          } else {
+            parent.right = null
+          }
+        }else if(current.right == null) { // 只有一个子节点的节点
+          if(current == this.root) {
+            this.root = current.left
+          }else if(isLeftChild) {
+            parent.left = current.left
+          } else {
+            parent.right = current.left
+          }
+        } else if(current.left === null) {
+          if(current == this.root) {
+            this.root = current.right
+          } else if(isLeftChild) {
+            parent.left = current.right
+          } else {
+            parent.right = current.right
+          }
+        }else { // 删除有两个节点的节点
+          // 1.获取后继节点 successor是后继节点
+          var successor = this.getSuccessor(current)
+          // 2.判断是否是根节点
+          if(current == this.root) {
+            this.root = successor
+          } else if(isLeftChild) {
+            parent.left = successor
+          } else {
+            parent.right = successor
+          }
+          // 3. 将删除节点的左子树赋值给successor
+          successor.left = current.left
+        }
+
+        return true
+      }
+
+      // 找后继的方法
+      BinarySearchTree.prototype.getSuccessor = function (delNode) {
+        // 1. 定义变量，存储临时节点
+        let successorParent = delNode
+        let successor = delNode
+        let current = delNode.right // 要从右子树开始找
+
+        // 2. 寻找节点
+        while(current != null) {
+          successorParent = successor
+          successor = current
+          current = current.left
+        }
+
+        // 3. 如果是要删除树中15的情况，还需要如下代码  successor 是18
+        // 如果后继节点不是删除节点的右节点
+        if(successor != delNode.right) {
+          successorParent.left = successor.right
+          successor.right = delNode.right
+        }
+        return successor
       }
     }
 
@@ -186,8 +264,28 @@
     bst.insert(18)
     bst.insert(25)
     bst.insert(6)
+    bst.insert(19)
 
     // 测试先序遍历结果
+    // var resultString = ''
+    // var inOrderResultString = ''
+    // var postOrderResultString = ''
+    // bst.preOrderTraverse(function (key) {
+    //   resultString += key + ' '
+    // }) 
+    // bst.inOrderTraverse(function (key) {
+    //   inOrderResultString += key + ' '
+    // })
+    // bst.postOrderTraverse(function (key) {
+    //   postOrderResultString += key + ' '
+    // })
+    // console.log(resultString)
+    // console.log(inOrderResultString);
+    // console.log(postOrderResultString);
+    
+    // console.log(bst.remove(15))
+    console.log(bst.remove(24));
+    
     var resultString = ''
     var inOrderResultString = ''
     var postOrderResultString = ''
@@ -203,8 +301,7 @@
     console.log(resultString)
     console.log(inOrderResultString);
     console.log(postOrderResultString);
-    
-    
+    console.log(inOrderResultString);
     
   </script>
 </body>
